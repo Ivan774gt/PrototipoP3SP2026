@@ -31,7 +31,7 @@ public class VendedorDAO {
         "SELECT codigo_vendedor, nombre_vendedor, direccion_vendedor, telefono_vendedor, nit_vendedor, estatus_vendedor FROM vendedores WHERE codigo_vendedor = ?";
 
 
-    // 🔍 CONSULTA GENERAL
+    // CONSULTA GENERAL
     public List<clsVendedor> consultaVendedores() {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -65,7 +65,7 @@ public class VendedorDAO {
         return vendedores;
     }
 
-    // ➕ INSERT
+    //INSERT
     public int ingresaVendedor(clsVendedor vendedor) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -94,7 +94,7 @@ public class VendedorDAO {
         return rows;
     }
 
-    // ✏️ UPDATE
+    //UPDATE
     public int actualizaVendedor(clsVendedor vendedor) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -125,7 +125,7 @@ public class VendedorDAO {
         return rows;
     }
 
-    // ❌ DELETE
+    //DELETE
     public int borrarVendedor(clsVendedor vendedor) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -150,7 +150,7 @@ public class VendedorDAO {
         return rows;
     }
 
-    // 🔍 BUSCAR POR CÓDIGO
+    //BUSCAR POR CÓDIGO
     public clsVendedor consultaVendedorPorCodigo(clsVendedor vendedor) {
         Connection conn = null;
         PreparedStatement stmt = null;
