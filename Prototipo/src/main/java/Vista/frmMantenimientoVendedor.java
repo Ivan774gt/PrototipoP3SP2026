@@ -1,4 +1,4 @@
-// Marco Hernandez
+// Boris de Leon 9959-24-6203
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,6 +10,7 @@ import Controlador.clsSeguridad;
 import Controlador.clsBitacora;
 import Controlador.clsUsuario;
 import Controlador.clsUsuarioConectado;
+import Controlador.clsVendedor;
 import Modelo.BitacoraDAO;
 import Modelo.Conexion;
 import java.util.List;
@@ -41,36 +42,34 @@ int codigoAplicacion=10001;
     }
 
     public void llenadoDeTablas() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
-        modelo.addColumn("Nombre Usuario");
-        modelo.addColumn("Contraseña");
-        modelo.addColumn("Última sesión");
-        modelo.addColumn("Estatus");
-        modelo.addColumn("Nombre Real");
-        modelo.addColumn("Correo");
-        modelo.addColumn("Teléfono");
-        modelo.addColumn("Dirección");
-        modelo.addColumn("Tipo Usuario");
-        clsUsuario usuario = new clsUsuario();
-        //VendedorDAO vendedorDAO = new VendedorDAO();
-        List<clsUsuario> listaUsuarios = usuario.getListadoUsuarios();
-        tablaUsuarios.setModel(modelo);
-        String[] dato = new String[9];
-        for (int i = 0; i < listaUsuarios.size(); i++) {
-            dato[0] = Integer.toString(listaUsuarios.get(i).getUsuId());
-            dato[1] = listaUsuarios.get(i).getUsuNombre();
-            dato[2] = listaUsuarios.get(i).getUsuContrasena();
-            dato[3] = listaUsuarios.get(i).getUsuUltimaSesion();
-            dato[4] = listaUsuarios.get(i).getUsuEstatus();
-            dato[5] = listaUsuarios.get(i).getUsuNombreReal();
-            dato[6] = listaUsuarios.get(i).getUsuCorreo();
-            dato[7] = listaUsuarios.get(i).getUsuTelefono();
-            dato[8] = listaUsuarios.get(i).getUsuDireccion();
-            
-            modelo.addRow(dato);
-        }       
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("ID Vendedor");
+    modelo.addColumn("Nombre");
+    modelo.addColumn("Direccion");
+    modelo.addColumn("Telefono");
+    modelo.addColumn("Nit");
+    modelo.addColumn("Estatus");
+
+    clsVendedor vendedor = new clsVendedor();
+    List<clsVendedor> lista = vendedor.getListadoVendedores();
+
+    tablaUsuarios.setModel(modelo);
+
+    String[] dato = new String[6];
+
+    for (int i = 0; i < lista.size(); i++) {
+        dato[0] = lista.get(i).getCodigo_vendedor();
+        dato[1] = lista.get(i).getNombre_vendedor();
+        dato[2] = lista.get(i).getDireccion_vendedor();
+        dato[3] = lista.get(i).getTelefono_vendedor();
+        dato[4] = lista.get(i).getNit_vendedor();
+        dato[5] = lista.get(i).getEstatus_vendedor();
+
+        modelo.addRow(dato);
     }
+}
+      
+    
 
     public frmMantenimientoVendedor() {
         initComponents();
@@ -346,7 +345,7 @@ int codigoAplicacion=10001;
                                     .addComponent(label13)
                                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label10)
                             .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
@@ -386,44 +385,91 @@ int codigoAplicacion=10001;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-        int registrosBorrados=0;
-        clsUsuario usuario = new clsUsuario();
-       usuario.setUsuId(Integer.parseInt(txtbuscado.getText()));
-       //objeto
-        Modelo.UsuarioDAO dao = new Modelo.UsuarioDAO();
-        registrosBorrados=usuario.setBorrarUsuario(usuario);
-        JOptionPane.showMessageDialog(null, "Registro Borrado\n", 
-                    "Información del Sistema", JOptionPane.INFORMATION_MESSAGE);
-        llenadoDeTablas();
-        
-        int resultadoBitacora=0;
-        //Duplicidad con el insert
-       // clsBitacora bitacoraRegistro = new clsBitacora();
-       // bitacoraRegistro.setUsucodigo(usuario.getUsuId());
-       // bitacoraRegistro.setAplcodigo(codigoAplicacion);
-       // bitacoraRegistro.setBitaccion("DEL");
-        BitacoraDAO bitacoradao = new BitacoraDAO();
-        
-        //se agrego clsUsuarioConectado.getUsuId() por usuario.getUsuID
-        resultadoBitacora = bitacoradao.insert(clsUsuarioConectado.getUsuId(), codigoAplicacion, "DELETE");      
-        
-        limpiarTextos();
+        // TODO add your handling code here:                                                                                     
+    clsVendedor vendedor = new clsVendedor();
+    vendedor.setCodigo_vendedor(txtbuscado.getText());
+
+    int resultado = vendedor.setBorrarVendedor(vendedor);
+
+    if (resultado > 0) {
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.insert(clsUsuarioConectado.getUsuId(), codigoAplicacion, 
+                "DELETE VENDEDOR: " + txtbuscado.getText());
+    }
+
+    JOptionPane.showMessageDialog(null, "Registro Eliminado");
+
+    llenadoDeTablas();
+    limpiarTextos();
+
     }//GEN-LAST:event_btnEliminarActionPerformed
     int contador=0; 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-       
+                                                 
+    clsVendedor vendedor = new clsVendedor();
+
+    vendedor.setCodigo_vendedor(txtCodigo.getText());
+    vendedor.setNombre_vendedor(txtNombre.getText());
+    vendedor.setDireccion_vendedor(txtDireccion.getText());
+    vendedor.setTelefono_vendedor(txtTelefono.getText());
+    vendedor.setNit_vendedor(txtNit.getText());
+    vendedor.setEstatus_vendedor(txtEstatus.getText());
+
+    int resultado = vendedor.setIngresarVendedor(vendedor);
+
+    if (resultado > 0) {
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.insert(clsUsuarioConectado.getUsuId(), codigoAplicacion, 
+                "INSERT VENDEDOR: " + txtCodigo.getText());
+    }
+
+    JOptionPane.showMessageDialog(null, "Registro Insertado");
+
+    llenadoDeTablas();
+    limpiarTextos();
+ 
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-            // TODO add your handling code here:       
-   
+            // TODO add your handling code here:                                            
+    clsVendedor vendedor = new clsVendedor();
+    vendedor.setCodigo_vendedor(txtbuscado.getText());
+
+    vendedor = vendedor.getBuscarVendedorPorCodigo(vendedor);
+
+    txtCodigo.setText(vendedor.getCodigo_vendedor());
+    txtNombre.setText(vendedor.getNombre_vendedor());
+    txtDireccion.setText(vendedor.getDireccion_vendedor());
+    txtTelefono.setText(vendedor.getTelefono_vendedor());
+    txtNit.setText(vendedor.getNit_vendedor());
+    txtEstatus.setText(vendedor.getEstatus_vendedor());   
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-//        // TODO add your handling code here:
-        
-      
+       // TODO add your handling code here:                                                                                     
+    clsVendedor vendedor = new clsVendedor();
+
+    vendedor.setCodigo_vendedor(txtCodigo.getText());
+    vendedor.setNombre_vendedor(txtNombre.getText());
+    vendedor.setDireccion_vendedor(txtDireccion.getText());
+    vendedor.setTelefono_vendedor(txtTelefono.getText());
+    vendedor.setNit_vendedor(txtNit.getText());
+    vendedor.setEstatus_vendedor(txtEstatus.getText());
+
+    int resultado = vendedor.setModificarVendedor(vendedor);
+
+    if (resultado > 0) {
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.insert(clsUsuarioConectado.getUsuId(), codigoAplicacion, 
+                "UPDATE VENDEDOR: " + txtCodigo.getText());
+    }
+
+    JOptionPane.showMessageDialog(null, "Registro Modificado");
+
+    llenadoDeTablas();
+    limpiarTextos();
+
+
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -455,13 +501,6 @@ int codigoAplicacion=10001;
         btnModificar.setEnabled(false);
         btnEliminar.setEnabled(false);
     }    
-    public void esperar5min(){
-        try {
-            //Ponemos a "Dormir" el programa durante los minutos que querramos
-            Thread.sleep(5*60*1000);
-        } catch (Exception e) {
-            System.out.println(e);}
-    }   
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
        

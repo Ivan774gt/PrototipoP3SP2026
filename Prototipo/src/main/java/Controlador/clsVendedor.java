@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
+//Boris de Leon 9959-24-6203
 package Controlador;
 
 import java.util.List;
@@ -98,7 +100,7 @@ public class clsVendedor {
                 ", estatus_vendedor=" + estatus_vendedor + '}';
     }
 
-    // 🔥 MÉTODOS (IGUAL ESTILO QUE USUARIO)
+    // Metodos de vendedor
 
     public clsVendedor getBuscarVendedorPorCodigo(clsVendedor vendedor) {
         VendedorDAO dao = new VendedorDAO();
